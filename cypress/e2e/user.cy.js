@@ -2,21 +2,15 @@ import userData from "../fixtures/user-data.json";
 import LoginPage from "../pages/loginPage.js";
 import DashboardPage from "../pages/dashboardPage.js";
 import MenuPage from "../pages/menuPage.js";
+import MyInfoPage from "../pages/myInfoPage.js";
 
 const loginPage = new LoginPage();
 const dashboardPage = new DashboardPage();
 const menuPage = new MenuPage();
+const myInfoPage = new MyInfoPage();
 
 describe("testes no ORANGE HRM", () => {
-  const selectorsList = {
-    firstNameField: "[name='firstName']",
-    lastNameField: "[name = 'lastName']",
-    genericField: ".oxd-input--active",
-    dateField: ".oxd-input",
-    genericComboBox: ".oxd-select-text-input",
-    dateCloseButton: ".--close",
-    submitButton: "[type = 'submit']",
-  };
+  const selectorsList = {};
 
   it.only("user info update - Success!", () => {
     loginPage.accessLoginPage();
@@ -27,19 +21,10 @@ describe("testes no ORANGE HRM", () => {
     dashboardPage.checkDashboardPage();
     menuPage.accessMyInfo();
 
-    cy.get(selectorsList.firstNameField).clear().type("firstNameTest");
-    cy.get(selectorsList.lastNameField).clear().type("lastNameTest");
-    cy.get(selectorsList.genericField).eq(3).clear().type("EmployeeID");
-    cy.get(selectorsList.genericField).eq(4).clear().type("othertest");
-    cy.get(selectorsList.genericField).eq(5).clear().type("Drivertest");
-    cy.get(selectorsList.dateField).eq(7).clear().type("2026-10-03");
-    cy.get(selectorsList.dateCloseButton).click();
-    cy.get(selectorsList.submitButton).eq(0).click({ force: true });
-    cy.get("body").should("contain", "Successfully Updated");
-    cy.get(selectorsList.genericComboBox).eq(0).click();
-    cy.get(".oxd-select-dropdown > :nth-child(4)").click();
-    cy.get(selectorsList.genericComboBox).eq(1).click();
-    cy.get(".oxd-select-dropdown > :nth-child(2) > span").click();
+    myInfoPage.fillPersonalDetails("First Name", "Last Name");
+    myInfoPage.fillEmployeeDetails("employeeId", "otherId", "2026-10-03");
+    myInfoPage.fillStatus();
+    myInfoPage.saveForm();
   });
 
   it("login - Fail!", () => {
